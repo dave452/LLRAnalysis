@@ -90,3 +90,4 @@ def prepare_DG(LLR_folder, n_repeats, betas, dg_tol, dg_db):
         obs_df = pd.read_csv(f'{folder}obs.csv')
         final_df = pd.read_csv(f'{folder}final.csv')
         ReadDoubleGaussian(betas,dg_db, dg_tol,1, final_df, obs_df, folder)
+

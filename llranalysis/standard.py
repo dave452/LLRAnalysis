@@ -3,6 +3,7 @@ import pandas as pd
 import os.path
 from llranalysis import utils
 import re
+import matplotlib.pyplot as plt
 
 def BL(P):
     return (1 - ( (P.flatten()**4).mean()/ (3 * (((P.flatten()**2).mean())** 2) )  ) ).mean()
@@ -72,6 +73,7 @@ def num_blocks(X):
     else:
         autocorr, err = 0.,0.
         print("Error")
+    n_block = 1
     for n in range(int(autocorr* 4), leng):
         if(leng %  n== 0):
             n_block = int(leng /  n)
@@ -161,3 +163,29 @@ def ReadOutputFull(files):
         DF = DF.append(DF_tmp, ignore_index=True)
         HIST_DF = HIST_DF.append(HIST_DF_tmp, ignore_index=True)
     return DF, HIST_DF
+
+def plot_history(file,N_poly = - 1, N_plaq = -1):
+    df_name = file + 'full.csv'
+    print(file)
+    if os.path.isfile(df_name):
+        full_df = pd.read_csv(df_name)
+        plt.subplot(2,1,1)
+        plt.plot(full_df['Poly'][:N_poly])
+        plt.ylabel('$|l_p|$',fontsize=30)
+        plt.xlabel('N configurations',fontsize=30)
+        plt.subplot(2,1,2)
+        plt.hist(full_df['Poly'], 1000)
+        plt.xlabel('$|l_p|$',fontsize=30)
+        plt.tight_layout()
+        plt.show()
+        plt.subplot(2,1,1)
+        plt.plot(full_df['Plaq'][:N_plaq])
+        plt.ylabel('$u_p$',fontsize=30)
+        plt.xlabel('N configurations',fontsize=30)
+        plt.subplot(2,1,2)
+        plt.hist(full_df['Plaq'], 1000)
+        plt.xlabel('$u_p$',fontsize=30)
+        plt.tight_layout()
+        plt.show()
+    else:
+        print(df_name + ' not found')
