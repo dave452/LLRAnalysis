@@ -429,14 +429,17 @@ def calc_prob_distribution(final_df, beta, lnz, xs = np.array([])):
         ys[i] = np.exp(calc_lnrho(final_df, x * (6*final_df['V'].values[0])) + beta*x*(6*final_df['V'].values[0]) - lnz)
     return np.array(xs), np.array(ys)
 
+def prepare_data_single(folder, n_replicas, std_files, std_folder, betas, betas_critical, calc_poly = True):
+    files = [f'Rep_{j}/out_0' for j in range(n_replicas)]
+    RM, fa_df, final_df = CSV(files , f'{LLR_folder}{nr}/CSV/')
+    comp_dF = ReadObservables(std_df['Beta'].values,final_df,fa_df,f'{LLR_folder}{nr}/CSV/',file = 'comparison.csv', calc_poly = calc_poly)
+    full_dF = ReadObservables(betas,final_df,fa_df,f'{LLR_folder}{nr}/CSV/',file = 'obs.csv', calc_poly = calc_poly)
+    critical_dF = ReadObservables(betas_critical,final_df,fa_df,f'{LLR_folder}{nr}/CSV/',file = 'obs_critical.csv', calc_poly=False)
+
 def prepare_data(LLR_folder, n_repeats, n_replicas, std_files, std_folder, betas, betas_critical, calc_poly = True):
     std_df, hist_df = standard.CSV(std_files, std_folder)
     for nr in range(n_repeats):
-        files = [f'{LLR_folder}{nr}/Rep_{j}/out_0' for j in range(n_replicas)]
-        RM, fa_df, final_df = CSV(files , f'{LLR_folder}{nr}/CSV/')
-        comp_dF = ReadObservables(std_df['Beta'].values,final_df,fa_df,f'{LLR_folder}{nr}/CSV/',file = 'comparison.csv', calc_poly = calc_poly)
-        full_dF = ReadObservables(betas,final_df,fa_df,f'{LLR_folder}{nr}/CSV/',file = 'obs.csv', calc_poly = calc_poly)
-        critical_dF = ReadObservables(betas_critical,final_df,fa_df,f'{LLR_folder}{nr}/CSV/',file = 'obs_critical.csv', calc_poly=False)
+        prepare_data_single(f'{LLR_folder}{nr}/', n_replicas, std_files, std_folder, betas, betas_critical, calc_poly)
 
 def half_intervals(originalfolder, reducedfolder, mode='even'):
     for i in range(20):
