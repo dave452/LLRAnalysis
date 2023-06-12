@@ -28,6 +28,9 @@ def plot_RM_convergence(boot_folder, n_boots, interval, N_iterations):
     print('DE/6V:', 2* RM['dE'].values[0] / (6*RM['V'].values[0]))
     plt.show()
 
+
+
+
 def plot_RM_repeats(boot_folder, n_boots, interval):
     RM_df_names = [boot_folder + str(m) + '/CSV/RM.csv' for m in range(n_boots)]
     figure_folder = boot_folder + 'Figures/'
